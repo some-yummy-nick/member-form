@@ -1,14 +1,49 @@
 <script setup lang="ts">
 import Header from '@/components/Header.vue'
-import Members from '@/components/Members.vue'
+import MembersList from '@/components/MembersList.vue'
+import { useMembersStore } from '@/stores/members.ts'
+import { member } from '@/ts/data/member.ts'
+import { onMounted } from 'vue'
+import type { Member } from '@/ts/types/Member.ts'
 
-function handleAdd() {}
+const memberStore = useMembersStore()
+
+const members = memberStore.members
+
+function handleAdd() {
+  const lastMember = members.at(-1)
+  const currentMember = { ...member }
+  if (lastMember) {
+    currentMember.id = lastMember.id + 1
+  }
+  memberStore.setMember(currentMember)
+}
+
+function checkLocalMembers() {
+  let members = localStorage.getItem('members')
+  if (members) {
+    members = JSON.parse(members)
+    members?.forEach((member: Member) => {
+      memberStore.setMember(member)
+    })
+  }
+}
+
+onMounted(() => {
+  checkLocalMembers()
+  memberStore.$subscribe(
+    (state) => {
+      localStorage.setItem('members', JSON.stringify(state.events.target))
+    },
+    { flush: 'sync' },
+  )
+})
 </script>
 
 <template>
-  <Header @handleAdd="handleAdd" />
+  <Header @handle-add="handleAdd" />
   <main>
-    <Members />
+    <MembersList :items="members" />
   </main>
 </template>
 
