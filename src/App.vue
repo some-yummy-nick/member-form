@@ -30,22 +30,27 @@ function checkLocalMembers() {
   }
 }
 
-watch(members, (newValue) => {
-  const savedMembers: Member[] = []
-  newValue.forEach((item) => {
-    let isValid = true
-    Object.entries(item).forEach((element) => {
-      const [key, value] = element
-      if (required.includes(key) && !value) {
-        isValid = false
+watch(
+  members,
+  (newValue) => {
+    console.log(newValue)
+    const savedMembers: Member[] = []
+    newValue.forEach((item) => {
+      let isValid = true
+      Object.entries(item).forEach((element) => {
+        const [key, value] = element
+        if (required.includes(key) && value === '') {
+          isValid = false
+        }
+      })
+      if (isValid) {
+        savedMembers.push(item)
       }
     })
-    if (isValid) {
-      savedMembers.push(item)
-    }
-  })
-  localStorage.setItem('members', JSON.stringify(savedMembers))
-})
+    localStorage.setItem('members', JSON.stringify(savedMembers))
+  },
+  { immediate: true },
+)
 
 onMounted(() => {
   checkLocalMembers()

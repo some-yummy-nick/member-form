@@ -12,21 +12,26 @@ const props = defineProps<{
 const memberStore = useMembersStore()
 
 const showPassword = ref(false)
+const showPasswordField = ref(true)
 
 const login = defineModel('login')
 const password = defineModel('password')
+const type = defineModel('type')
+const selected = ref('')
 const errors = ref([] as Fields[])
 const required = ['password', 'login']
 
 login.value = props.item.login
 password.value = props.item.password
+type.value = props.item.type
+selected.value = props.item.type[0].id
 
 function handleDelete() {
   memberStore.deleteMember(props.item.id)
 }
 
 function validation(name: string, value: string) {
-  return !(required.includes(name) && !value)
+  return !(required.includes(name) && value == '')
 }
 
 function checkValidation(name: Fields, value: string) {
@@ -46,11 +51,24 @@ watch(login, (newVal: any) => {
 watch(password, (newVal: any) => {
   checkValidation('password', newVal)
 })
+
+watch(selected, (newVal: any) => {
+  password.value = ''
+  showPasswordField.value = true
+
+  if (newVal === 'LDAP') {
+    password.value = null
+    showPasswordField.value = false
+  }
+})
 </script>
 
 <template>
   <form class="mb-3 member" @submit.prevent="handleDelete">
     <div class="d-flex align-items-center gap-3">
+      <select class="form-select member__select" aria-label="Type" v-model="selected">
+        <option v-for="item in type" :value="item.id">{{ item.name }}</option>
+      </select>
       <input
         type="text"
         class="form-control member__input"
@@ -58,7 +76,9 @@ watch(password, (newVal: any) => {
         :class="{ 'is-invalid': errors.includes('login') }"
         v-model="login"
       />
+
       <div
+        v-if="showPasswordField"
         class="form-control d-flex align-items-center"
         :class="{ 'is-invalid': errors.includes('password') }"
       >
@@ -79,6 +99,7 @@ watch(password, (newVal: any) => {
           <img v-else src="@/assets/images/icons/eye-slash.svg" width="16" height="16" alt="" />
         </button>
       </div>
+
       <button class="btn btn-danger member__delete">
         <img src="@/assets/images/icons/delete.svg" width="16" height="16" alt="" />
       </button>
