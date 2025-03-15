@@ -81,7 +81,9 @@ watch(selected, (newVal: any) => {
   <form class='mb-3 member' @submit.prevent='handleDelete'>
     <div class='row g-3'>
       <div class='col-md-3'>
+        <label for="label" class="form-label text-secondary">Метки</label>
         <input
+          id='label'
           type='text'
           class='form-control member__input'
           maxlength='50'
@@ -89,12 +91,16 @@ watch(selected, (newVal: any) => {
         />
       </div>
       <div class='col-md-3'>
-        <select class='form-select member__select' aria-label='Type' v-model='selected'>
+        <label for="type" class="form-label text-secondary">Тип записи</label>
+
+        <select id="type" class='form-select member__select' aria-label='type' v-model='selected'>
           <option v-for='item in type' :value='item.id'>{{ item.name }}</option>
         </select>
       </div>
       <div class='col-md-3'>
+        <label for="login" class="form-label text-secondary">Логин</label>
         <input
+          id='login'
           type='text'
           class='form-control member__input'
           maxlength='100'
@@ -104,6 +110,7 @@ watch(selected, (newVal: any) => {
         />
       </div>
       <div class='col-md-3'>
+        <label for="password" class="form-label text-secondary">Пароль</label>
         <div class='d-flex align-items-center gap-2'>
           <div
             v-if='showPasswordField'
@@ -111,6 +118,7 @@ watch(selected, (newVal: any) => {
             :class="{ 'is-invalid': errors.includes('password') }"
           >
             <input
+              id='password'
               class='form-control-plaintext'
               maxlength='100'
               :type="showPassword ? 'text' : 'password'"
