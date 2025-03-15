@@ -8,6 +8,8 @@ See [Vite Configuration Reference](https://vite.dev/config/).
 
 ## [Test task](./Task.md)
 
+## ![screenshot](./member-form.png)
+
 ## Project Setup
 
 ```sh
