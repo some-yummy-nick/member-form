@@ -4,14 +4,15 @@ export const member: Member = {
   id: 0,
   login: '',
   password: '',
+  label: '',
   type: [
     {
       id: 'local',
-      name: 'Локальная',
+      name: 'Локальная'
     },
     {
       id: 'LDAP',
-      name: 'LDAP',
-    },
-  ],
+      name: 'LDAP'
+    }
+  ]
 }

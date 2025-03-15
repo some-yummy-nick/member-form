@@ -1,1 +1,1 @@
-export type Fields = 'login' | 'password' | 'type'
+export type Fields = 'login' | 'password' | 'type' | 'label'

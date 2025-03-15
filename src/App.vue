@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang='ts'>
 import Header from '@/components/Header.vue'
 import MembersList from '@/components/MembersList.vue'
 import { useMembersStore } from '@/stores/members.ts'
@@ -24,7 +24,7 @@ function checkLocalMembers() {
   let members = localStorage.getItem('members')
   if (members) {
     members = JSON.parse(members)
-    members.forEach((member: Member) => {
+    members?.forEach((member: Member) => {
       memberStore.setMember(member)
     })
   }
@@ -33,8 +33,7 @@ function checkLocalMembers() {
 watch(
   members,
   (newValue) => {
-    console.log(newValue)
-    const savedMembers: Member[] = []
+    const savedMembers: Member[] = JSON.parse(localStorage.getItem('members')) || []
     newValue.forEach((item) => {
       let isValid = true
       Object.entries(item).forEach((element) => {
@@ -44,12 +43,17 @@ watch(
         }
       })
       if (isValid) {
-        savedMembers.push(item)
+        const currentMember = savedMembers.find(el => el.id === item.id)
+        if (currentMember) {
+          savedMembers.splice(savedMembers.findIndex(el => el.id === item.id), 1, item)
+        } else {
+          savedMembers.push(item)
+        }
       }
     })
     localStorage.setItem('members', JSON.stringify(savedMembers))
   },
-  { immediate: true },
+  { immediate: true }
 )
 
 onMounted(() => {
@@ -58,10 +62,8 @@ onMounted(() => {
 </script>
 
 <template>
-  <Header @handle-add="handleAdd" />
+  <Header @handle-add='handleAdd' />
   <main>
-    <MembersList :items="members" />
+    <MembersList :items='members' />
   </main>
 </template>
-
-<style scoped lang="scss"></style>

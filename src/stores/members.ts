@@ -14,6 +14,9 @@ export const useMembersStore = defineStore('members', {
     deleteMember(id: number) {
       const index = this.members.findIndex((member) => member.id === id)
       this.members.splice(index, 1)
+      const currentLocalStorage=JSON.parse(localStorage.getItem('members'))
+      currentLocalStorage.splice(index, 1)
+      localStorage.setItem('members', JSON.stringify(currentLocalStorage))
     },
     updateMember(id: number, prop: Fields, value: string) {
       const element: Member | undefined = this.members.find((member) => member.id === id)
